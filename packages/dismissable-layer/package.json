@@ -1,0 +1,38 @@
+{
+  "name": "@norns-ui/dismissable-layer",
+  "license": "MIT",
+  "author": "Dmitriy Chukhno <me@dmitr1sdae.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "node esbuild.config.js",
+    "pretty": "prettier --check $(find . -type d \\( -name 'node_modules' -o -name 'dist' \\) -prune -o -print)",
+    "pretty:fix": "prettier --write $(find . -type d \\( -name 'node_modules' -o -name 'dist' \\) -prune -o -print)"
+  },
+  "dependencies": {
+    "@norns-ui/hooks": "workspace:^",
+    "@norns-ui/norn": "workspace:^",
+    "@norns-ui/shared": "workspace:^",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "esbuild": "^0.23.0",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4"
+  }
+}
