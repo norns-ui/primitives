@@ -35,15 +35,17 @@ interface NornForwardRefComponent<E extends ElementType>
 
 const Norn = NODES.reduce((norn, node) => {
   const Node = forwardRef(
-    (props: NornPropsWithRef<typeof node>, forwardedRef: any) => {
-      const {asChild, ...nornProps} = props;
+    (
+      {asChild, ...restProps}: NornPropsWithRef<typeof node>,
+      forwardedRef: any,
+    ) => {
       const Comp: any = asChild ? Slot : node;
 
       if (typeof window !== "undefined") {
         (window as any)[Symbol.for("norns-ui")] = true;
       }
 
-      return <Comp {...nornProps} ref={forwardedRef} />;
+      return <Comp {...restProps} ref={forwardedRef} />;
     },
   );
 

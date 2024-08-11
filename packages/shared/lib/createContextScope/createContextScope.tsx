@@ -29,13 +29,14 @@ const createContextScope = (
     const index = defaultContexts.length;
     defaultContexts = [...defaultContexts, defaultContext];
 
-    const Provider = (
-      props: ContextValueType & {
-        scope: Scope<ContextValueType>;
-        children: ReactNode;
-      },
-    ) => {
-      const {scope, children, ...context} = props;
+    const Provider = ({
+      scope,
+      children,
+      ...context
+    }: ContextValueType & {
+      scope: Scope<ContextValueType>;
+      children: ReactNode;
+    }) => {
       const Context = scope?.[scopeName][index] || BaseContext;
       const value = useMemo(
         () => context,

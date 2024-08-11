@@ -44,8 +44,7 @@ const createCollection = <ItemElement extends HTMLElement, ItemData = {}>(
   const CollectionProvider: FC<{
     children?: ReactNode;
     scope: any;
-  }> = (props) => {
-    const {scope, children} = props;
+  }> = ({scope, children}) => {
     const ref = useRef<CollectionElement>(null);
     const itemMap = useRef<ContextValue["itemMap"]>(new Map()).current;
 
@@ -65,8 +64,7 @@ const createCollection = <ItemElement extends HTMLElement, ItemData = {}>(
   const COLLECTION_SLOT_NAME = name + "CollectionSlot";
 
   const CollectionSlot = forwardRef<CollectionElement, CollectionProps>(
-    (props, forwardedRef) => {
-      const {scope, children} = props;
+    ({scope, children}, forwardedRef) => {
       const context = useCollectionContext(
         COLLECTION_SLOT_NAME,
         scope,
@@ -88,8 +86,7 @@ const createCollection = <ItemElement extends HTMLElement, ItemData = {}>(
   };
 
   const CollectionItemSlot = forwardRef<ItemElement, CollectionItemSlotProps>(
-    (props, forwardedRef) => {
-      const {scope, children, ...itemData} = props;
+    ({scope, children, ...restProps}, forwardedRef) => {
       const ref = useRef<ItemElement>(null);
       const composedRefs = useComposedRefs(forwardedRef, ref);
       const context = useCollectionContext(
@@ -99,12 +96,15 @@ const createCollection = <ItemElement extends HTMLElement, ItemData = {}>(
 
       useEffect(() => {
         if (ref.current) {
-          context.itemMap.set(ref, {ref, ...(itemData as unknown as ItemData)});
+          context.itemMap.set(ref, {
+            ref,
+            ...(restProps as unknown as ItemData),
+          });
           return () => {
             context.itemMap.delete(ref);
           };
         }
-      }, [ref, context.itemMap, itemData]);
+      }, [ref, context.itemMap, restProps]);
 
       return (
         <Slot {...{[ITEM_DATA_ATTR]: ""}} ref={composedRefs}>

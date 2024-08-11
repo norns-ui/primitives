@@ -15,20 +15,22 @@ interface SlotCloneProps {
   children: ReactNode;
 }
 
-const SlotClone = forwardRef<any, SlotCloneProps>((props, forwardedRef) => {
-  const {children, ...slotProps} = props;
+const SlotClone = forwardRef<any, SlotCloneProps>(
+  ({children, ...restProps}, forwardedRef) => {
+    if (isValidElement(children)) {
+      const childrenRef = getElementRef(children);
+      return cloneElement(children, {
+        ...mergeProps(restProps, children.props),
+        // @ts-ignore
+        ref: forwardedRef
+          ? composeRefs(forwardedRef, childrenRef)
+          : childrenRef,
+      });
+    }
 
-  if (isValidElement(children)) {
-    const childrenRef = getElementRef(children);
-    return cloneElement(children, {
-      ...mergeProps(slotProps, children.props),
-      // @ts-ignore
-      ref: forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef,
-    });
-  }
-
-  return Children.count(children) > 1 ? Children.only(null) : null;
-});
+    return Children.count(children) > 1 ? Children.only(null) : null;
+  },
+);
 
 SlotClone.displayName = SLOT_CLONE_NAME;
 

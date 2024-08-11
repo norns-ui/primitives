@@ -75,129 +75,133 @@ interface DismissableLayerProps extends NornDivProps {
 const DismissableLayer = forwardRef<
   DismissableLayerElement,
   DismissableLayerProps
->((props, forwardedRef) => {
-  const {
-    disableOutsidePointerEvents = false,
-    onEscapeKeyDown,
-    onPointerDownOutside,
-    onFocusOutside,
-    onInteractOutside,
-    onDismiss,
-    ...layerProps
-  } = props;
-  const context = useContext(DismissableLayerContext);
-  const [node, setNode] = useState<DismissableLayerElement | null>(null);
-  const ownerDocument = node?.ownerDocument ?? globalThis?.document;
-  const [, force] = useState({});
-  const composedRefs = useComposedRefs(forwardedRef, (node) => setNode(node));
-  const layers = Array.from(context.layers);
-  const [highestLayerWithOutsidePointerEventsDisabled] = [
-    ...context.layersWithOutsidePointerEventsDisabled,
-  ].slice(-1);
-  const highestLayerWithOutsidePointerEventsDisabledIndex = layers.indexOf(
-    highestLayerWithOutsidePointerEventsDisabled,
-  );
-  const index = node ? layers.indexOf(node) : -1;
-  const isBodyPointerEventsDisabled =
-    context.layersWithOutsidePointerEventsDisabled.size > 0;
-  const isPointerEventsEnabled =
-    index >= highestLayerWithOutsidePointerEventsDisabledIndex;
-
-  const pointerDownOutside = usePointerDownOutside((event) => {
-    const target = event.target as HTMLElement;
-    const isPointerDownOnBranch = [...context.branches].some((branch) =>
-      branch.contains(target),
+>(
+  (
+    {
+      disableOutsidePointerEvents = false,
+      onEscapeKeyDown,
+      onPointerDownOutside,
+      onFocusOutside,
+      onInteractOutside,
+      onDismiss,
+      ...restProps
+    },
+    forwardedRef,
+  ) => {
+    const context = useContext(DismissableLayerContext);
+    const [node, setNode] = useState<DismissableLayerElement | null>(null);
+    const ownerDocument = node?.ownerDocument ?? globalThis?.document;
+    const [, force] = useState({});
+    const composedRefs = useComposedRefs(forwardedRef, (node) => setNode(node));
+    const layers = Array.from(context.layers);
+    const [highestLayerWithOutsidePointerEventsDisabled] = [
+      ...context.layersWithOutsidePointerEventsDisabled,
+    ].slice(-1);
+    const highestLayerWithOutsidePointerEventsDisabledIndex = layers.indexOf(
+      highestLayerWithOutsidePointerEventsDisabled,
     );
-    if (!isPointerEventsEnabled || isPointerDownOnBranch) return;
-    onPointerDownOutside?.(event);
-    onInteractOutside?.(event);
-    if (!event.defaultPrevented) onDismiss?.();
-  }, ownerDocument);
+    const index = node ? layers.indexOf(node) : -1;
+    const isBodyPointerEventsDisabled =
+      context.layersWithOutsidePointerEventsDisabled.size > 0;
+    const isPointerEventsEnabled =
+      index >= highestLayerWithOutsidePointerEventsDisabledIndex;
 
-  const focusOutside = useFocusOutside((event) => {
-    const target = event.target as HTMLElement;
-    const isFocusInBranch = [...context.branches].some((branch) =>
-      branch.contains(target),
-    );
-    if (isFocusInBranch) return;
-    onFocusOutside?.(event);
-    onInteractOutside?.(event);
-    if (!event.defaultPrevented) onDismiss?.();
-  }, ownerDocument);
+    const pointerDownOutside = usePointerDownOutside((event) => {
+      const target = event.target as HTMLElement;
+      const isPointerDownOnBranch = [...context.branches].some((branch) =>
+        branch.contains(target),
+      );
+      if (!isPointerEventsEnabled || isPointerDownOnBranch) return;
+      onPointerDownOutside?.(event);
+      onInteractOutside?.(event);
+      if (!event.defaultPrevented) onDismiss?.();
+    }, ownerDocument);
 
-  useEscapeKeydown((event: KeyboardEvent) => {
-    const isHighestLayer = index === context.layers.size - 1;
-    if (!isHighestLayer) return;
-    onEscapeKeyDown?.(event);
-    if (!event.defaultPrevented && onDismiss) {
-      event.preventDefault();
-      onDismiss();
-    }
-  }, ownerDocument);
+    const focusOutside = useFocusOutside((event) => {
+      const target = event.target as HTMLElement;
+      const isFocusInBranch = [...context.branches].some((branch) =>
+        branch.contains(target),
+      );
+      if (isFocusInBranch) return;
+      onFocusOutside?.(event);
+      onInteractOutside?.(event);
+      if (!event.defaultPrevented) onDismiss?.();
+    }, ownerDocument);
 
-  useEffect(() => {
-    if (!node) return;
-    if (disableOutsidePointerEvents) {
-      if (context.layersWithOutsidePointerEventsDisabled.size === 0) {
-        originalBodyPointerEvents = ownerDocument.body.style.pointerEvents;
-        ownerDocument.body.style.pointerEvents = "none";
+    useEscapeKeydown((event: KeyboardEvent) => {
+      const isHighestLayer = index === context.layers.size - 1;
+      if (!isHighestLayer) return;
+      onEscapeKeyDown?.(event);
+      if (!event.defaultPrevented && onDismiss) {
+        event.preventDefault();
+        onDismiss();
       }
-      context.layersWithOutsidePointerEventsDisabled.add(node);
-    }
-    context.layers.add(node);
-    dispatchUpdate();
-    return () => {
-      if (
-        disableOutsidePointerEvents &&
-        context.layersWithOutsidePointerEventsDisabled.size === 1
-      ) {
-        ownerDocument.body.style.pointerEvents = originalBodyPointerEvents;
-      }
-    };
-  }, [node, ownerDocument, disableOutsidePointerEvents, context]);
+    }, ownerDocument);
 
-  useEffect(() => {
-    return () => {
+    useEffect(() => {
       if (!node) return;
-      context.layers.delete(node);
-      context.layersWithOutsidePointerEventsDisabled.delete(node);
+      if (disableOutsidePointerEvents) {
+        if (context.layersWithOutsidePointerEventsDisabled.size === 0) {
+          originalBodyPointerEvents = ownerDocument.body.style.pointerEvents;
+          ownerDocument.body.style.pointerEvents = "none";
+        }
+        context.layersWithOutsidePointerEventsDisabled.add(node);
+      }
+      context.layers.add(node);
       dispatchUpdate();
-    };
-  }, [node, context]);
+      return () => {
+        if (
+          disableOutsidePointerEvents &&
+          context.layersWithOutsidePointerEventsDisabled.size === 1
+        ) {
+          ownerDocument.body.style.pointerEvents = originalBodyPointerEvents;
+        }
+      };
+    }, [node, ownerDocument, disableOutsidePointerEvents, context]);
 
-  useEffect(() => {
-    const handleUpdate = () => force({});
-    document.addEventListener(CONTEXT_UPDATE, handleUpdate);
-    return () => document.removeEventListener(CONTEXT_UPDATE, handleUpdate);
-  }, []);
+    useEffect(() => {
+      return () => {
+        if (!node) return;
+        context.layers.delete(node);
+        context.layersWithOutsidePointerEventsDisabled.delete(node);
+        dispatchUpdate();
+      };
+    }, [node, context]);
 
-  return (
-    <Norn.div
-      {...layerProps}
-      ref={composedRefs}
-      style={{
-        pointerEvents: isBodyPointerEventsDisabled
-          ? isPointerEventsEnabled
-            ? "auto"
-            : "none"
-          : undefined,
-        ...props.style,
-      }}
-      onFocusCapture={composeEventHandlers(
-        props.onFocusCapture,
-        focusOutside.onFocusCapture,
-      )}
-      onBlurCapture={composeEventHandlers(
-        props.onBlurCapture,
-        focusOutside.onBlurCapture,
-      )}
-      onPointerDownCapture={composeEventHandlers(
-        props.onPointerDownCapture,
-        pointerDownOutside.onPointerDownCapture,
-      )}
-    />
-  );
-});
+    useEffect(() => {
+      const handleUpdate = () => force({});
+      document.addEventListener(CONTEXT_UPDATE, handleUpdate);
+      return () => document.removeEventListener(CONTEXT_UPDATE, handleUpdate);
+    }, []);
+
+    return (
+      <Norn.div
+        {...restProps}
+        ref={composedRefs}
+        style={{
+          pointerEvents: isBodyPointerEventsDisabled
+            ? isPointerEventsEnabled
+              ? "auto"
+              : "none"
+            : undefined,
+          ...restProps.style,
+        }}
+        onFocusCapture={composeEventHandlers(
+          restProps.onFocusCapture,
+          focusOutside.onFocusCapture,
+        )}
+        onBlurCapture={composeEventHandlers(
+          restProps.onBlurCapture,
+          focusOutside.onBlurCapture,
+        )}
+        onPointerDownCapture={composeEventHandlers(
+          restProps.onPointerDownCapture,
+          pointerDownOutside.onPointerDownCapture,
+        )}
+      />
+    );
+  },
+);
 
 DismissableLayer.displayName = DISMISSABLE_LAYER_NAME;
 

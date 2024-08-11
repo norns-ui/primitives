@@ -15,43 +15,44 @@ interface SlotProps extends HTMLAttributes<HTMLElement> {
   children?: ReactNode;
 }
 
-const Slot = forwardRef<HTMLElement, SlotProps>((props, forwardedRef) => {
-  const {children, ...slotProps} = props;
-  const childrenArray = Children.toArray(children);
-  const slottable = childrenArray.find(isSlottable);
+const Slot = forwardRef<HTMLElement, SlotProps>(
+  ({children, ...restProps}, forwardedRef) => {
+    const childrenArray = Children.toArray(children);
+    const slottable = childrenArray.find(isSlottable);
 
-  if (slottable) {
-    // the new element to render is the one passed as a child of `Slottable`
-    const newElement = slottable.props.children as ReactNode;
+    if (slottable) {
+      // the new element to render is the one passed as a child of `Slottable`
+      const newElement = slottable.props.children as ReactNode;
 
-    const newChildren = childrenArray.map((child) => {
-      if (child === slottable) {
-        // because the new element will be the one rendered, we are only interested
-        // in grabbing its children (`newElement.props.children`)
-        if (Children.count(newElement) > 1) return Children.only(null);
-        return isValidElement(newElement)
-          ? (newElement.props.children as ReactNode)
-          : null;
-      } else {
-        return child;
-      }
-    });
+      const newChildren = childrenArray.map((child) => {
+        if (child === slottable) {
+          // because the new element will be the one rendered, we are only interested
+          // in grabbing its children (`newElement.props.children`)
+          if (Children.count(newElement) > 1) return Children.only(null);
+          return isValidElement(newElement)
+            ? (newElement.props.children as ReactNode)
+            : null;
+        } else {
+          return child;
+        }
+      });
+
+      return (
+        <SlotClone {...restProps} ref={forwardedRef}>
+          {isValidElement(newElement)
+            ? cloneElement(newElement, undefined, newChildren)
+            : null}
+        </SlotClone>
+      );
+    }
 
     return (
-      <SlotClone {...slotProps} ref={forwardedRef}>
-        {isValidElement(newElement)
-          ? cloneElement(newElement, undefined, newChildren)
-          : null}
+      <SlotClone {...restProps} ref={forwardedRef}>
+        {children}
       </SlotClone>
     );
-  }
-
-  return (
-    <SlotClone {...slotProps} ref={forwardedRef}>
-      {children}
-    </SlotClone>
-  );
-});
+  },
+);
 
 Slot.displayName = SLOT_NAME;
 

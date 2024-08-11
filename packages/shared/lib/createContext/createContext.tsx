@@ -8,8 +8,10 @@ const createContext = <ContextValueType extends object | null>(
     defaultContext,
   );
 
-  const Provider = (props: ContextValueType & {children: ReactNode}) => {
-    const {children, ...context} = props;
+  const Provider = ({
+    children,
+    ...context
+  }: ContextValueType & {children: ReactNode}) => {
     // Only re-memoize when prop values change
     const value = useMemo(
       () => context,
