@@ -618,6 +618,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@norns-ui/avatar@workspace:packages/avatar":
+  version: 0.0.0-use.local
+  resolution: "@norns-ui/avatar@workspace:packages/avatar"
+  dependencies:
+    "@norns-ui/hooks": "workspace:^"
+    "@norns-ui/norn": "workspace:^"
+    "@norns-ui/shared": "workspace:^"
+    "@types/node": "npm:^20.14.9"
+    "@types/react": "npm:^18.3.3"
+    "@types/react-dom": "npm:^18.3.0"
+    esbuild: "npm:^0.23.0"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    tsup: "npm:^8.2.4"
+    typescript: "npm:^5.5.4"
+  languageName: unknown
+  linkType: soft
+
 "@norns-ui/collection@workspace:^, @norns-ui/collection@workspace:packages/collection":
   version: 0.0.0-use.local
   resolution: "@norns-ui/collection@workspace:packages/collection"
@@ -772,7 +790,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@norns-ui/visually-hidden@workspace:packages/visually-hidden"
   dependencies:
-    "@norns-ui/shared": "workspace:^"
+    "@norns-ui/norn": "workspace:^"
     "@types/node": "npm:^20.14.9"
     "@types/react": "npm:^18.3.3"
     "@types/react-dom": "npm:^18.3.0"
