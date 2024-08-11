@@ -4,6 +4,7 @@ export * from "./useControllableState";
 export * from "./useDirection";
 export * from "./useEscapeKeydown";
 export * from "./useId";
+export * from "./useImageLoadingStatus";
 export * from "./useLayoutEffect";
 export * from "./usePrevious";
 export * from "./useResizeObserver";
