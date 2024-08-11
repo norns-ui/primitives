@@ -31,3 +31,6 @@ const AvatarFallback = forwardRef<AvatarFallbackElement, AvatarFallbackProps>(
 );
 
 AvatarFallback.displayName = FALLBACK_NAME;
+
+export {AvatarFallback};
+export type {AvatarFallbackProps};

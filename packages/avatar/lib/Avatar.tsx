@@ -41,4 +41,4 @@ const Avatar = forwardRef<AvatarElement, AvatarProps>(
 Avatar.displayName = AVATAR_NAME;
 
 export {Avatar, createAvatarScope, useAvatarContext};
-export type {AvatarProps, AvatarElement, NornSpanProps, ScopedProps}
+export type {AvatarProps, AvatarElement, NornSpanProps, ScopedProps};

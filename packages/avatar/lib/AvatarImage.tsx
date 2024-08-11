@@ -48,3 +48,6 @@ const AvatarImage = forwardRef<AvatarImageElement, AvatarImageProps>(
 );
 
 AvatarImage.displayName = IMAGE_NAME;
+
+export {AvatarImage};
+export type {AvatarImageProps};
