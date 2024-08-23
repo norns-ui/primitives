@@ -1,5 +1,6 @@
 {
   "name": "@norns-ui/shared",
+  "version": "1.0.0",
   "license": "MIT",
   "author": "Dmitriy Chukhno <me@dmitr1sdae.com>",
   "type": "module",

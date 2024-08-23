@@ -1,5 +1,6 @@
 {
   "name": "@norns-ui/norn",
+  "version": "1.0.0",
   "license": "MIT",
   "author": "Dmitriy Chukhno <me@dmitr1sdae.com>",
   "type": "module",
@@ -22,7 +23,7 @@
     "publish": "yarn npm publish --tolerate-republish"
   },
   "dependencies": {
-    "@norns-ui/slot": "*",
+    "@norns-ui/slot": "workspace:^",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
