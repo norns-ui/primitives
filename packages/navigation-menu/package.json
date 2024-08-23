@@ -22,13 +22,13 @@
     "publish": "yarn npm publish --tolerate-republish"
   },
   "dependencies": {
-    "@norns-ui/collection": "workspace:^",
-    "@norns-ui/dismissable-layer": "workspace:^",
-    "@norns-ui/hooks": "workspace:^",
-    "@norns-ui/norn": "workspace:^",
-    "@norns-ui/presence": "workspace:^",
-    "@norns-ui/shared": "workspace:^",
-    "@norns-ui/visually-hidden": "workspace:^",
+    "@norns-ui/collection": "*",
+    "@norns-ui/dismissable-layer": "*",
+    "@norns-ui/hooks": "*",
+    "@norns-ui/norn": "*",
+    "@norns-ui/presence": "*",
+    "@norns-ui/shared": "*",
+    "@norns-ui/visually-hidden": "*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
