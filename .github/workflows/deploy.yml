@@ -1,0 +1,45 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  packages: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "yarn"
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        id: modules-cache
+        with:
+          path: "node_modules"
+          key: yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Install packages
+        if: steps.modules-cache.outputs.cache-hit != 'true'
+        run: yarn
+
+      - name: Build
+        run: yarn build
+
+      - name: Publish
+        run: |
+          echo "npmAuthToken: $NPM_TOKEN" >> .yarnrc.yml
+          yarn publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
