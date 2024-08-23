@@ -22,7 +22,7 @@
     "publish": "yarn npm publish --tolerate-republish"
   },
   "dependencies": {
-    "@norns-ui/hooks": "workspace:^",
+    "@norns-ui/hooks": "*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

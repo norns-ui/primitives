@@ -22,7 +22,7 @@
     "publish": "yarn npm publish --tolerate-republish"
   },
   "dependencies": {
-    "@norns-ui/slot": "workspace:^",
+    "@norns-ui/slot": "*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
