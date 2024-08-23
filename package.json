@@ -12,7 +12,8 @@
   "scripts": {
     "build": "lerna run build",
     "pretty": "lerna run pretty --parallel",
-    "pretty:fix": "lerna run pretty:fix --parallel"
+    "pretty:fix": "lerna run pretty:fix --parallel",
+    "publish": "lerna run publish --parallel"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
