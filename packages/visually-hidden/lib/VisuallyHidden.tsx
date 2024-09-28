@@ -1,5 +1,5 @@
-import {ComponentPropsWithoutRef, ElementRef, forwardRef} from "react";
 import {Norn} from "@norns-ui/norn";
+import {ComponentPropsWithoutRef, ElementRef, forwardRef} from "react";
 
 const VISUALLY_HIDDEN_NAME = "VisuallyHidden";
 

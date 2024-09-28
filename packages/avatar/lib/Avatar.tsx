@@ -1,6 +1,11 @@
 import {Norn} from "@norns-ui/norn";
 import {createContextScope, Scope} from "@norns-ui/shared";
-import {forwardRef, useState} from "react";
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  forwardRef,
+  useState,
+} from "react";
 
 const AVATAR_NAME = "Avatar";
 
@@ -18,8 +23,8 @@ type AvatarContextValue = {
 const [AvatarProvider, useAvatarContext] =
   createAvatarContext<AvatarContextValue>(AVATAR_NAME);
 
-type AvatarElement = React.ElementRef<typeof Norn.span>;
-type NornSpanProps = React.ComponentPropsWithoutRef<typeof Norn.span>;
+type AvatarElement = ElementRef<typeof Norn.span>;
+type NornSpanProps = ComponentPropsWithoutRef<typeof Norn.span>;
 interface AvatarProps extends NornSpanProps {}
 
 const Avatar = forwardRef<AvatarElement, AvatarProps>(
@@ -41,4 +46,4 @@ const Avatar = forwardRef<AvatarElement, AvatarProps>(
 Avatar.displayName = AVATAR_NAME;
 
 export {Avatar, createAvatarScope, useAvatarContext};
-export type {AvatarProps, AvatarElement, NornSpanProps, ScopedProps};
+export type {AvatarElement, AvatarProps, NornSpanProps, ScopedProps};

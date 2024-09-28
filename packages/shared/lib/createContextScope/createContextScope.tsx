@@ -1,10 +1,12 @@
 import {
-  createContext as createReactContext,
-  useContext as useReactContext,
-  ReactNode,
-  useMemo,
   Context,
+  createContext as createReactContext,
+  ReactNode,
+  useContext as useReactContext,
+  useMemo,
 } from "react";
+
+import {composeContextScopes} from "~/composeContextScopes";
 
 type Scope<C = any> = {[scopeName: string]: Context<C>[]} | undefined;
 type ScopeHook = (scope: Scope) => {[__scopeProp: string]: Scope};
@@ -51,8 +53,12 @@ const createContextScope = (
     ) => {
       const Context = scope?.[scopeName][index] || BaseContext;
       const context = useReactContext(Context);
-      if (context) return context;
-      if (defaultContext !== undefined) return defaultContext;
+      if (context) {
+        return context;
+      }
+      if (defaultContext !== undefined) {
+        return defaultContext;
+      }
       throw new Error(
         `\`${consumerName}\` must be used within \`${rootComponentName}\``,
       );
@@ -80,37 +86,6 @@ const createContextScope = (
     createContext,
     composeContextScopes(createScope, ...createContextScopeDeps),
   ] as const;
-};
-
-const composeContextScopes = (...scopes: CreateScope[]) => {
-  const baseScope = scopes[0];
-  if (scopes.length === 1) return baseScope;
-
-  const createScope: CreateScope = () => {
-    const scopeHooks = scopes.map((createScope) => ({
-      useScope: createScope(),
-      scopeName: createScope.scopeName,
-    }));
-
-    return (overrideScopes) => {
-      const nextScopes = scopeHooks.reduce(
-        (nextScopes, {useScope, scopeName}) => {
-          const scopeProps = useScope(overrideScopes);
-          const currentScope = scopeProps[`__scope${scopeName}`];
-          return {...nextScopes, ...currentScope};
-        },
-        {},
-      );
-
-      return useMemo(
-        () => ({[`__scope${baseScope.scopeName}`]: nextScopes}),
-        [nextScopes],
-      );
-    };
-  };
-
-  createScope.scopeName = baseScope.scopeName;
-  return createScope;
 };
 
 export {createContextScope};

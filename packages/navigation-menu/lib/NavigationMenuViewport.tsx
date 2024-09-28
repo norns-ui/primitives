@@ -1,67 +1,29 @@
 "use client";
 
-import {ElementRef, forwardRef, useState} from "react";
+import {useComposedRefs, useResizeObserver} from "@norns-ui/hooks";
+import {Norn} from "@norns-ui/norn";
 import {Presence} from "@norns-ui/presence";
+import {
+  composeEventHandlers,
+  composeRefs,
+  getOpenState,
+  whenMouse,
+} from "@norns-ui/shared";
+import {ElementRef, forwardRef, useState} from "react";
+
 import {
   ScopedProps,
   useNavigationMenuContext,
   useViewportContentContext,
 } from "./NavigationMenu";
-import {Norn} from "@norns-ui/norn";
-import {NornDivProps} from "./NavigationMenuSub";
-import {useComposedRefs, useResizeObserver} from "@norns-ui/hooks";
 import {
   CONTENT_NAME,
   NavigationMenuContentElement,
   NavigationMenuContentImpl,
 } from "./NavigationMenuContent";
-import {
-  getOpenState,
-  whenMouse,
-  composeEventHandlers,
-  composeRefs,
-} from "@norns-ui/shared";
+import {NornDivProps} from "./NavigationMenuSub";
 
 const VIEWPORT_NAME = "NavigationMenuViewport";
-
-type NavigationMenuViewportElement = NavigationMenuViewportImplElement;
-interface NavigationMenuViewportProps
-  extends Omit<
-    NavigationMenuViewportImplProps,
-    "children" | "activeContentValue"
-  > {
-  /**
-   * Used to force mounting when more control is needed. Useful when
-   * controlling animation with React animation libraries.
-   */
-  forceMount?: true;
-}
-
-const NavigationMenuViewport = forwardRef<
-  NavigationMenuViewportElement,
-  NavigationMenuViewportProps
->(
-  (
-    {forceMount, ...restProps}: ScopedProps<NavigationMenuViewportProps>,
-    forwardedRef,
-  ) => {
-    const context = useNavigationMenuContext(
-      VIEWPORT_NAME,
-      restProps.scopeNavigationMenu,
-    );
-    const open = Boolean(context.value);
-
-    return (
-      <Presence present={forceMount || open}>
-        <NavigationMenuViewportImpl {...restProps} ref={forwardedRef} />
-      </Presence>
-    );
-  },
-);
-
-NavigationMenuViewport.displayName = VIEWPORT_NAME;
-
-/* -----------------------------------------------------------------------------------------------*/
 
 type NavigationMenuViewportImplElement = ElementRef<typeof Norn.div>;
 interface NavigationMenuViewportImplProps extends NornDivProps {}
@@ -111,8 +73,9 @@ const NavigationMenuViewportImpl = forwardRef<
      * from `0.5` to `1` of the intended size.
      */
     const handleSizeChange = () => {
-      if (content)
+      if (content) {
         setSize({width: content.offsetWidth, height: content.offsetHeight});
+      }
     };
     useResizeObserver(content, handleSizeChange);
 
@@ -148,7 +111,9 @@ const NavigationMenuViewportImpl = forwardRef<
                   ref={composeRefs(ref, (node) => {
                     // We only want to update the stored node when another is available
                     // as we need to smoothly transition between them.
-                    if (isActive && node) setContent(node);
+                    if (isActive && node) {
+                      setContent(node);
+                    }
                   })}
                 />
               </Presence>
@@ -159,6 +124,43 @@ const NavigationMenuViewportImpl = forwardRef<
     );
   },
 );
+
+type NavigationMenuViewportElement = NavigationMenuViewportImplElement;
+interface NavigationMenuViewportProps
+  extends Omit<
+    NavigationMenuViewportImplProps,
+    "children" | "activeContentValue"
+  > {
+  /**
+   * Used to force mounting when more control is needed. Useful when
+   * controlling animation with React animation libraries.
+   */
+  forceMount?: true;
+}
+
+const NavigationMenuViewport = forwardRef<
+  NavigationMenuViewportElement,
+  NavigationMenuViewportProps
+>(
+  (
+    {forceMount, ...restProps}: ScopedProps<NavigationMenuViewportProps>,
+    forwardedRef,
+  ) => {
+    const context = useNavigationMenuContext(
+      VIEWPORT_NAME,
+      restProps.scopeNavigationMenu,
+    );
+    const open = Boolean(context.value);
+
+    return (
+      <Presence present={forceMount || open}>
+        <NavigationMenuViewportImpl {...restProps} ref={forwardedRef} />
+      </Presence>
+    );
+  },
+);
+
+NavigationMenuViewport.displayName = VIEWPORT_NAME;
 
 export {NavigationMenuViewport};
 export type {NavigationMenuViewportElement, NavigationMenuViewportProps};

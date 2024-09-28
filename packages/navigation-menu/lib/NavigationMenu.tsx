@@ -1,5 +1,6 @@
 "use client";
 
+import {createCollection} from "@norns-ui/collection";
 import {
   useComposedRefs,
   useControllableState,
@@ -7,11 +8,6 @@ import {
 } from "@norns-ui/hooks";
 import {Norn} from "@norns-ui/norn";
 import {createContextScope, Scope} from "@norns-ui/shared";
-import {
-  NavigationMenuProvider,
-  NavigationMenuProviderPrivateProps,
-  NavigationMenuProviderProps,
-} from "./NavigationMenuProvider";
 import {
   ComponentPropsWithoutRef,
   ElementRef,
@@ -22,14 +18,19 @@ import {
   useRef,
   useState,
 } from "react";
-import {NavigationMenuTriggerElement} from "./NavigationMenuTrigger";
+
 import {FocusGroupItemElement} from "./FocusGroupItem";
-import {NavigationMenuViewportElement} from "./NavigationMenuViewport";
 import {
   ViewportContentMounterElement,
   ViewportContentMounterProps,
 } from "./NavigationMenuContent";
-import {createCollection} from "@norns-ui/collection";
+import {
+  NavigationMenuProvider,
+  NavigationMenuProviderPrivateProps,
+  NavigationMenuProviderProps,
+} from "./NavigationMenuProvider";
+import {NavigationMenuTriggerElement} from "./NavigationMenuTrigger";
+import {NavigationMenuViewportElement} from "./NavigationMenuViewport";
 
 type Orientation = "vertical" | "horizontal";
 type Direction = "ltr" | "rtl";
@@ -138,7 +139,9 @@ const NavigationMenu = forwardRef<NavigationMenuElement, NavigationMenuProps>(
 
         if (isOpen) {
           window.clearTimeout(skipDelayTimerRef.current);
-          if (hasSkipDelayDuration) setIsOpenDelayed(false);
+          if (hasSkipDelayDuration) {
+            setIsOpenDelayed(false);
+          }
         } else {
           window.clearTimeout(skipDelayTimerRef.current);
           skipDelayTimerRef.current = window.setTimeout(
@@ -191,15 +194,18 @@ const NavigationMenu = forwardRef<NavigationMenuElement, NavigationMenuProps>(
     return (
       <NavigationMenuProvider
         scope={scopeNavigationMenu}
-        isRootMenu={true}
+        isRootMenu
         value={value}
         dir={direction}
         orientation={orientation}
         rootNavigationMenu={navigationMenu}
         onTriggerEnter={(itemValue) => {
           window.clearTimeout(openTimerRef.current);
-          if (isOpenDelayed) handleDelayedOpen(itemValue);
-          else handleOpen(itemValue);
+          if (isOpenDelayed) {
+            handleDelayedOpen(itemValue);
+          } else {
+            handleOpen(itemValue);
+          }
         }}
         onTriggerLeave={() => {
           window.clearTimeout(openTimerRef.current);
@@ -227,24 +233,24 @@ const NavigationMenu = forwardRef<NavigationMenuElement, NavigationMenuProps>(
 NavigationMenu.displayName = NAVIGATION_MENU_NAME;
 
 export {
-  NavigationMenu,
   Collection,
-  useCollection,
   createCollectionScope,
-  FocusGroupCollection,
-  useFocusGroupCollection,
   createFocusGroupCollectionScope,
   createNavigationMenuContext,
   createNavigationMenuScope,
+  FocusGroupCollection,
+  NavigationMenu,
   NavigationMenuProviderImpl,
+  useCollection,
+  useFocusGroupCollection,
   useNavigationMenuContext,
-  ViewportContentProvider,
   useViewportContentContext,
+  ViewportContentProvider,
 };
 export type {
-  Orientation,
-  ScopedProps,
   ContentData,
   NavigationMenuElement,
   NavigationMenuProps,
+  Orientation,
+  ScopedProps,
 };

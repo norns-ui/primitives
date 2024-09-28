@@ -1,8 +1,10 @@
 "use client";
 
-import {useCallbackRef} from "~/useCallbackRef";
-import {useUncontrolledState} from "./useUncontrolledState";
 import {Dispatch, SetStateAction, useCallback} from "react";
+
+import {useCallbackRef} from "~/useCallbackRef";
+
+import {useUncontrolledState} from "./useUncontrolledState";
 
 type UseControllableStateProps<T> = {
   prop?: T | undefined;
@@ -31,7 +33,9 @@ const useControllableState = <T>({
         const setter = nextValue as SetStateFn<T>;
         const value =
           typeof nextValue === "function" ? setter(prop) : nextValue;
-        if (value !== prop) handleChange(value as T);
+        if (value !== prop) {
+          handleChange(value as T);
+        }
       } else {
         setUncontrolledProp(nextValue);
       }

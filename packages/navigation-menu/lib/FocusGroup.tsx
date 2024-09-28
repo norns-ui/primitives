@@ -1,7 +1,8 @@
 "use client";
 
-import {ElementRef, forwardRef} from "react";
 import {Norn} from "@norns-ui/norn";
+import {ElementRef, forwardRef} from "react";
+
 import {
   FocusGroupCollection,
   ScopedProps,

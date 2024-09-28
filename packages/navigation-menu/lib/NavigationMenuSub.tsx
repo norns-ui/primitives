@@ -1,8 +1,9 @@
 "use client";
 
-import {ComponentPropsWithoutRef, ElementRef, forwardRef} from "react";
 import {useControllableState} from "@norns-ui/hooks";
 import {Norn} from "@norns-ui/norn";
+import {ComponentPropsWithoutRef, ElementRef, forwardRef} from "react";
+
 import {
   Orientation,
   ScopedProps,
@@ -77,4 +78,4 @@ const NavigationMenuSub = forwardRef<
 NavigationMenuSub.displayName = SUB_NAME;
 
 export {NavigationMenuSub};
-export type {NornDivProps, NavigationMenuSubProps};
+export type {NavigationMenuSubProps, NornDivProps};

@@ -9,4 +9,4 @@ const dispatchDiscreteCustomEvent = <E extends CustomEvent>(
   }
 };
 
-export default dispatchDiscreteCustomEvent;
+export {dispatchDiscreteCustomEvent};

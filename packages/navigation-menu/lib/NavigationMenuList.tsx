@@ -1,12 +1,13 @@
 "use client";
 
-import {ElementRef, ComponentPropsWithoutRef, forwardRef} from "react";
 import {Norn} from "@norns-ui/norn";
+import {ComponentPropsWithoutRef, ElementRef, forwardRef} from "react";
+
 import {FocusGroup} from "./FocusGroup";
 import {
+  Collection,
   ScopedProps,
   useNavigationMenuContext,
-  Collection,
 } from "./NavigationMenu";
 
 const LIST_NAME = "NavigationMenuList";
@@ -51,6 +52,6 @@ NavigationMenuList.displayName = LIST_NAME;
 export {NavigationMenuList};
 export type {
   NavigationMenuListElement,
-  NornUnorderedListProps,
   NavigationMenuListProps,
+  NornUnorderedListProps,
 };
