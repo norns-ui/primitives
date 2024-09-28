@@ -1,26 +1,27 @@
 "use client";
 
-import {Norn} from "@norns-ui/norn";
-import {ScopedProps} from "./NavigationMenu";
-import {createNavigationMenuContext} from "./NavigationMenu";
-import {VisuallyHidden} from "@norns-ui/visually-hidden";
-import {NavigationMenuTriggerElement} from "./NavigationMenuTrigger";
-import {
-  forwardRef,
-  useRef,
-  useCallback,
-  ElementRef,
-  RefObject,
-  MutableRefObject,
-  ComponentPropsWithoutRef,
-} from "react";
-import {NavigationMenuContentElement} from "./NavigationMenuContent";
 import {useId} from "@norns-ui/hooks";
+import {Norn} from "@norns-ui/norn";
 import {
   focusFirst,
   getTabbableCandidates,
   removeFromTabOrder,
 } from "@norns-ui/shared";
+import {VisuallyHidden} from "@norns-ui/visually-hidden";
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  forwardRef,
+  MutableRefObject,
+  RefObject,
+  useCallback,
+  useRef,
+} from "react";
+
+import {ScopedProps} from "./NavigationMenu";
+import {createNavigationMenuContext} from "./NavigationMenu";
+import {NavigationMenuContentElement} from "./NavigationMenuContent";
+import {NavigationMenuTriggerElement} from "./NavigationMenuTrigger";
 
 const ITEM_NAME = "NavigationMenuItem";
 
@@ -73,16 +74,18 @@ const NavigationMenuItem = forwardRef<
       if (contentRef.current) {
         restoreContentTabOrderRef.current();
         const candidates = getTabbableCandidates(contentRef.current);
-        if (candidates.length)
+        if (candidates.length) {
           focusFirst(side === "start" ? candidates : candidates.reverse());
+        }
       }
     }, []);
 
     const handleContentExit = useCallback(() => {
       if (contentRef.current) {
         const candidates = getTabbableCandidates(contentRef.current);
-        if (candidates.length)
+        if (candidates.length) {
           restoreContentTabOrderRef.current = removeFromTabOrder(candidates);
+        }
       }
     }, []);
 

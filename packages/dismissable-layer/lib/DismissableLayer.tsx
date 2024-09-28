@@ -1,5 +1,9 @@
+/* eslint-disable no-nested-ternary */
 "use client";
 
+import {useComposedRefs, useEscapeKeydown} from "@norns-ui/hooks";
+import {Norn} from "@norns-ui/norn";
+import {composeEventHandlers} from "@norns-ui/shared";
 import {
   ComponentPropsWithoutRef,
   createContext,
@@ -10,21 +14,13 @@ import {
   useRef,
   useState,
 } from "react";
-import {Norn} from "@norns-ui/norn";
-import {
-  useCallbackRef,
-  useComposedRefs,
-  useEscapeKeydown,
-} from "@norns-ui/hooks";
-import {
-  composeEventHandlers,
-  dispatchDiscreteCustomEvent,
-} from "@norns-ui/shared";
+
+import {dispatchUpdate} from "./dispatchUpdate";
+import {useFocusOutside} from "./useFocusOutside";
+import {usePointerDownOutside} from "./usePointerDownOutside";
 
 const DISMISSABLE_LAYER_NAME = "DismissableLayer";
 const CONTEXT_UPDATE = "dismissableLayer.update";
-const POINTER_DOWN_OUTSIDE = "dismissableLayer.pointerDownOutside";
-const FOCUS_OUTSIDE = "dismissableLayer.focusOutside";
 
 let originalBodyPointerEvents: string;
 
@@ -111,10 +107,14 @@ const DismissableLayer = forwardRef<
       const isPointerDownOnBranch = [...context.branches].some((branch) =>
         branch.contains(target),
       );
-      if (!isPointerEventsEnabled || isPointerDownOnBranch) return;
+      if (!isPointerEventsEnabled || isPointerDownOnBranch) {
+        return;
+      }
       onPointerDownOutside?.(event);
       onInteractOutside?.(event);
-      if (!event.defaultPrevented) onDismiss?.();
+      if (!event.defaultPrevented) {
+        onDismiss?.();
+      }
     }, ownerDocument);
 
     const focusOutside = useFocusOutside((event) => {
@@ -122,15 +122,21 @@ const DismissableLayer = forwardRef<
       const isFocusInBranch = [...context.branches].some((branch) =>
         branch.contains(target),
       );
-      if (isFocusInBranch) return;
+      if (isFocusInBranch) {
+        return;
+      }
       onFocusOutside?.(event);
       onInteractOutside?.(event);
-      if (!event.defaultPrevented) onDismiss?.();
+      if (!event.defaultPrevented) {
+        onDismiss?.();
+      }
     }, ownerDocument);
 
     useEscapeKeydown((event: KeyboardEvent) => {
       const isHighestLayer = index === context.layers.size - 1;
-      if (!isHighestLayer) return;
+      if (!isHighestLayer) {
+        return;
+      }
       onEscapeKeyDown?.(event);
       if (!event.defaultPrevented && onDismiss) {
         event.preventDefault();
@@ -139,7 +145,9 @@ const DismissableLayer = forwardRef<
     }, ownerDocument);
 
     useEffect(() => {
-      if (!node) return;
+      if (!node) {
+        return;
+      }
       if (disableOutsidePointerEvents) {
         if (context.layersWithOutsidePointerEventsDisabled.size === 0) {
           originalBodyPointerEvents = ownerDocument.body.style.pointerEvents;
@@ -161,7 +169,9 @@ const DismissableLayer = forwardRef<
 
     useEffect(() => {
       return () => {
-        if (!node) return;
+        if (!node) {
+          return;
+        }
         context.layers.delete(node);
         context.layersWithOutsidePointerEventsDisabled.delete(node);
         dispatchUpdate();
@@ -236,121 +246,5 @@ DismissableLayerBranch.displayName = BRANCH_NAME;
 type PointerDownOutsideEvent = CustomEvent<{originalEvent: PointerEvent}>;
 type FocusOutsideEvent = CustomEvent<{originalEvent: FocusEvent}>;
 
-const usePointerDownOutside = (
-  onPointerDownOutside?: (event: PointerDownOutsideEvent) => void,
-  ownerDocument: Document = globalThis?.document,
-) => {
-  const handlePointerDownOutside = useCallbackRef(
-    onPointerDownOutside,
-  ) as EventListener;
-  const isPointerInsideReactTreeRef = useRef(false);
-  const handleClickRef = useRef(() => {});
-
-  useEffect(() => {
-    const handlePointerDown = (event: PointerEvent) => {
-      if (event.target && !isPointerInsideReactTreeRef.current) {
-        const eventDetail = {originalEvent: event};
-
-        const handleAndDispatchPointerDownOutsideEvent = () => {
-          handleAndDispatchCustomEvent(
-            POINTER_DOWN_OUTSIDE,
-            handlePointerDownOutside,
-            eventDetail,
-            {discrete: true},
-          );
-        };
-
-        if (event.pointerType === "touch") {
-          ownerDocument.removeEventListener("click", handleClickRef.current);
-          handleClickRef.current = handleAndDispatchPointerDownOutsideEvent;
-          ownerDocument.addEventListener("click", handleClickRef.current, {
-            once: true,
-          });
-        } else {
-          handleAndDispatchPointerDownOutsideEvent();
-        }
-      } else {
-        ownerDocument.removeEventListener("click", handleClickRef.current);
-      }
-      isPointerInsideReactTreeRef.current = false;
-    };
-    const timerId = window.setTimeout(() => {
-      ownerDocument.addEventListener("pointerdown", handlePointerDown);
-    }, 0);
-    return () => {
-      window.clearTimeout(timerId);
-      ownerDocument.removeEventListener("pointerdown", handlePointerDown);
-      ownerDocument.removeEventListener("click", handleClickRef.current);
-    };
-  }, [ownerDocument, handlePointerDownOutside]);
-
-  return {
-    onPointerDownCapture: () => (isPointerInsideReactTreeRef.current = true),
-  };
-};
-
-const useFocusOutside = (
-  onFocusOutside?: (event: FocusOutsideEvent) => void,
-  ownerDocument: Document = globalThis?.document,
-) => {
-  const handleFocusOutside = useCallbackRef(onFocusOutside) as EventListener;
-  const isFocusInsideReactTreeRef = useRef(false);
-
-  useEffect(() => {
-    const handleFocus = (event: FocusEvent) => {
-      if (event.target && !isFocusInsideReactTreeRef.current) {
-        const eventDetail = {originalEvent: event};
-        handleAndDispatchCustomEvent(
-          FOCUS_OUTSIDE,
-          handleFocusOutside,
-          eventDetail,
-          {
-            discrete: false,
-          },
-        );
-      }
-    };
-    ownerDocument.addEventListener("focusin", handleFocus);
-    return () => ownerDocument.removeEventListener("focusin", handleFocus);
-  }, [ownerDocument, handleFocusOutside]);
-
-  return {
-    onFocusCapture: () => (isFocusInsideReactTreeRef.current = true),
-    onBlurCapture: () => (isFocusInsideReactTreeRef.current = false),
-  };
-};
-
-const dispatchUpdate = () => {
-  const event = new CustomEvent(CONTEXT_UPDATE);
-  document.dispatchEvent(event);
-};
-
-const handleAndDispatchCustomEvent = <
-  E extends CustomEvent,
-  OriginalEvent extends Event,
->(
-  name: string,
-  handler: ((event: E) => void) | undefined,
-  detail: {originalEvent: OriginalEvent} & (E extends CustomEvent<infer D>
-    ? D
-    : never),
-  {discrete}: {discrete: boolean},
-) => {
-  const target = detail.originalEvent.target;
-  const event = new CustomEvent(name, {
-    bubbles: false,
-    cancelable: true,
-    detail,
-  });
-  if (handler)
-    target.addEventListener(name, handler as EventListener, {once: true});
-
-  if (discrete) {
-    dispatchDiscreteCustomEvent(target, event);
-  } else {
-    target.dispatchEvent(event);
-  }
-};
-
-export {DismissableLayer, DismissableLayerBranch};
-export type {DismissableLayerProps};
+export {CONTEXT_UPDATE, DismissableLayer, DismissableLayerBranch};
+export type {DismissableLayerProps, FocusOutsideEvent, PointerDownOutsideEvent};

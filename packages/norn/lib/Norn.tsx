@@ -1,10 +1,10 @@
+import {Slot} from "@norns-ui/slot";
 import {
   ComponentPropsWithRef,
   ElementType,
   forwardRef,
   ForwardRefExoticComponent,
 } from "react";
-import {Slot} from "@norns-ui/slot";
 
 const NODES = [
   "a",

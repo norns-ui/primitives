@@ -1,12 +1,8 @@
+/* eslint-disable jsx/no-aria-hidden-on-focusable */
 "use client";
 
-import {ComponentPropsWithoutRef, ElementRef, forwardRef, useRef} from "react";
+import {useComposedRefs} from "@norns-ui/hooks";
 import {Norn} from "@norns-ui/norn";
-import {
-  Collection,
-  ScopedProps,
-  useNavigationMenuContext,
-} from "./NavigationMenu";
 import {
   composeEventHandlers,
   getOpenState,
@@ -14,10 +10,16 @@ import {
   makeTriggerId,
   whenMouse,
 } from "@norns-ui/shared";
-import {useNavigationMenuItemContext} from "./NavigationMenuItem";
 import {VisuallyHidden} from "@norns-ui/visually-hidden";
+import {ComponentPropsWithoutRef, ElementRef, forwardRef, useRef} from "react";
+
 import {FocusGroupItem} from "./FocusGroupItem";
-import {useComposedRefs} from "@norns-ui/hooks";
+import {
+  Collection,
+  ScopedProps,
+  useNavigationMenuContext,
+} from "./NavigationMenu";
+import {useNavigationMenuItemContext} from "./NavigationMenuItem";
 
 const TRIGGER_NAME = "NavigationMenuTrigger";
 
@@ -85,8 +87,9 @@ const NavigationMenuTrigger = forwardRef<
                     wasClickCloseRef.current ||
                     itemContext.wasEscapeCloseRef.current ||
                     hasPointerMoveOpenedRef.current
-                  )
+                  ) {
                     return;
+                  }
                   context.onTriggerEnter(itemContext.value);
                   hasPointerMoveOpenedRef.current = true;
                 }),
@@ -94,7 +97,9 @@ const NavigationMenuTrigger = forwardRef<
               onPointerLeave={composeEventHandlers(
                 restProps.onPointerLeave,
                 whenMouse(() => {
-                  if (disabled) return;
+                  if (disabled) {
+                    return;
+                  }
                   context.onTriggerLeave();
                   hasPointerMoveOpenedRef.current = false;
                 }),
@@ -153,6 +158,6 @@ NavigationMenuTrigger.displayName = TRIGGER_NAME;
 export {NavigationMenuTrigger};
 export type {
   NavigationMenuTriggerElement,
-  NornButtonProps,
   NavigationMenuTriggerProps,
+  NornButtonProps,
 };

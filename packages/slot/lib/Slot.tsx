@@ -6,7 +6,8 @@ import {
   isValidElement,
   ReactNode,
 } from "react";
-import isSlottable from "./isSlottable";
+
+import {isSlottable} from "./isSlottable";
 import {SlotClone} from "./SlotClone";
 
 const SLOT_NAME = "Slot";
@@ -28,13 +29,14 @@ const Slot = forwardRef<HTMLElement, SlotProps>(
         if (child === slottable) {
           // because the new element will be the one rendered, we are only interested
           // in grabbing its children (`newElement.props.children`)
-          if (Children.count(newElement) > 1) return Children.only(null);
+          if (Children.count(newElement) > 1) {
+            return Children.only(null);
+          }
           return isValidElement(newElement)
             ? (newElement.props.children as ReactNode)
             : null;
-        } else {
-          return child;
         }
+        return child;
       });
 
       return (

@@ -1,1 +1,2 @@
-export * from "./DismissableLayer";
+export type {DismissableLayerProps} from "./DismissableLayer";
+export {DismissableLayer, DismissableLayerBranch} from "./DismissableLayer";

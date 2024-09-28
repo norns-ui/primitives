@@ -6,8 +6,9 @@ import {
   isValidElement,
   ReactNode,
 } from "react";
-import mergeProps from "./mergeProps";
-import getElementRef from "./getElementRef";
+
+import {getElementRef} from "./getElementRef";
+import {mergeProps} from "./mergeProps";
 
 const SLOT_CLONE_NAME = "SlotClone";
 

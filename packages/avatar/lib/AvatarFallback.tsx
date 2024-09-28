@@ -1,5 +1,6 @@
 import {Norn} from "@norns-ui/norn";
 import {ElementRef, forwardRef, useEffect, useState} from "react";
+
 import {NornSpanProps, ScopedProps, useAvatarContext} from "./Avatar";
 
 const FALLBACK_NAME = "AvatarFallback";

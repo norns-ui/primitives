@@ -1,52 +1,20 @@
 "use client";
 
+import {useResizeObserver} from "@norns-ui/hooks";
+import {Norn} from "@norns-ui/norn";
+import {Presence} from "@norns-ui/presence";
 import {ElementRef, forwardRef, useEffect, useState} from "react";
+import {createPortal} from "react-dom";
+
 import {
   ScopedProps,
   useCollection,
   useNavigationMenuContext,
 } from "./NavigationMenu";
-import {useResizeObserver} from "@norns-ui/hooks";
-import {createPortal} from "react-dom";
-import {Presence} from "@norns-ui/presence";
-import {Norn} from "@norns-ui/norn";
 import {NornDivProps} from "./NavigationMenuSub";
 import {NavigationMenuTriggerElement} from "./NavigationMenuTrigger";
 
 const INDICATOR_NAME = "NavigationMenuIndicator";
-
-type NavigationMenuIndicatorElement = NavigationMenuIndicatorImplElement;
-interface NavigationMenuIndicatorProps
-  extends NavigationMenuIndicatorImplProps {
-  forceMount?: true;
-}
-
-const NavigationMenuIndicator = forwardRef<
-  NavigationMenuIndicatorElement,
-  NavigationMenuIndicatorProps
->(
-  (
-    {forceMount, ...restProps}: ScopedProps<NavigationMenuIndicatorProps>,
-    forwardedRef,
-  ) => {
-    const context = useNavigationMenuContext(
-      INDICATOR_NAME,
-      restProps.scopeNavigationMenu,
-    );
-    const isVisible = Boolean(context.value);
-
-    return context.indicatorTrack
-      ? createPortal(
-          <Presence present={forceMount || isVisible}>
-            <NavigationMenuIndicatorImpl {...restProps} ref={forwardedRef} />
-          </Presence>,
-          context.indicatorTrack,
-        )
-      : null;
-  },
-);
-
-NavigationMenuIndicator.displayName = INDICATOR_NAME;
 
 type NavigationMenuIndicatorImplElement = ElementRef<typeof Norn.div>;
 interface NavigationMenuIndicatorImplProps extends NornDivProps {}
@@ -80,7 +48,9 @@ const NavigationMenuIndicatorImpl = forwardRef<
       const items = getItems();
       const triggerNode = items.find((item) => item.value === context.value)
         ?.ref.current;
-      if (triggerNode) setActiveTrigger(triggerNode);
+      if (triggerNode) {
+        setActiveTrigger(triggerNode);
+      }
     }, [getItems, context.value]);
 
     const handlePositionChange = () => {
@@ -124,6 +94,39 @@ const NavigationMenuIndicatorImpl = forwardRef<
     ) : null;
   },
 );
+
+type NavigationMenuIndicatorElement = NavigationMenuIndicatorImplElement;
+interface NavigationMenuIndicatorProps
+  extends NavigationMenuIndicatorImplProps {
+  forceMount?: true;
+}
+
+const NavigationMenuIndicator = forwardRef<
+  NavigationMenuIndicatorElement,
+  NavigationMenuIndicatorProps
+>(
+  (
+    {forceMount, ...restProps}: ScopedProps<NavigationMenuIndicatorProps>,
+    forwardedRef,
+  ) => {
+    const context = useNavigationMenuContext(
+      INDICATOR_NAME,
+      restProps.scopeNavigationMenu,
+    );
+    const isVisible = Boolean(context.value);
+
+    return context.indicatorTrack
+      ? createPortal(
+          <Presence present={forceMount || isVisible}>
+            <NavigationMenuIndicatorImpl {...restProps} ref={forwardedRef} />
+          </Presence>,
+          context.indicatorTrack,
+        )
+      : null;
+  },
+);
+
+NavigationMenuIndicator.displayName = INDICATOR_NAME;
 
 export {NavigationMenuIndicator};
 export type {NavigationMenuIndicatorElement, NavigationMenuIndicatorProps};

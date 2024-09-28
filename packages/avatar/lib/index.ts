@@ -1,6 +1,6 @@
-export {Avatar} from "./Avatar";
 export type {AvatarProps} from "./Avatar";
-export {AvatarFallback} from "./AvatarFallback";
+export {Avatar} from "./Avatar";
 export type {AvatarFallbackProps} from "./AvatarFallback";
-export {AvatarImage} from "./AvatarImage";
+export {AvatarFallback} from "./AvatarFallback";
 export type {AvatarImageProps} from "./AvatarImage";
+export {AvatarImage} from "./AvatarImage";
