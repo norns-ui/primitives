@@ -1,1 +1,1 @@
-export {default as dispatchDiscreteCustomEvent} from "./dispatchDiscreteCustomEvent";
+export * from "./dispatchDiscreteCustomEvent";

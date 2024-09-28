@@ -1,5 +1,8 @@
 "use client";
 
+import {useComposedRefs} from "@norns-ui/hooks";
+import {createContextScope} from "@norns-ui/shared";
+import {Slot} from "@norns-ui/slot";
 import {
   ComponentPropsWithoutRef,
   FC,
@@ -10,9 +13,6 @@ import {
   useEffect,
   useRef,
 } from "react";
-import {Slot} from "@norns-ui/slot";
-import {createContextScope} from "@norns-ui/shared";
-import {useComposedRefs} from "@norns-ui/hooks";
 
 type SlotProps = ComponentPropsWithoutRef<typeof Slot>;
 type CollectionElement = HTMLElement;
@@ -124,7 +124,9 @@ const createCollection = <ItemElement extends HTMLElement, ItemData = {}>(
 
     const getItems = useCallback(() => {
       const collectionNode = context.collectionRef.current;
-      if (!collectionNode) return [];
+      if (!collectionNode) {
+        return [];
+      }
       const orderedNodes = Array.from(
         collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`),
       );

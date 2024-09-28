@@ -20,4 +20,4 @@ const getElementRef = (element: ReactElement) => {
   return element.props.ref || (element as any).ref;
 };
 
-export default getElementRef;
+export {getElementRef};

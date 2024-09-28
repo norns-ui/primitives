@@ -1,1 +1,1 @@
-export * from "./Presence";
+export {Presence} from "./Presence";

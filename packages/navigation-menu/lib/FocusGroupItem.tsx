@@ -1,7 +1,9 @@
 "use client";
 
-import {ElementRef, forwardRef} from "react";
 import {Norn} from "@norns-ui/norn";
+import {composeEventHandlers, focusFirst} from "@norns-ui/shared";
+import {ElementRef, forwardRef} from "react";
+
 import {
   FocusGroupCollection,
   ScopedProps,
@@ -9,7 +11,6 @@ import {
   useNavigationMenuContext,
 } from "./NavigationMenu";
 import {NornButtonProps} from "./NavigationMenuTrigger";
-import {composeEventHandlers, focusFirst} from "@norns-ui/shared";
 
 const ARROW_KEYS = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"];
 const FOCUS_GROUP_ITEM_NAME = "FocusGroupItem";
@@ -44,7 +45,9 @@ const FocusGroupItem = forwardRef<FocusGroupItemElement, FocusGroupItemProps>(
               const prevItemKey =
                 context.dir === "rtl" ? "ArrowRight" : "ArrowLeft";
               const prevKeys = [prevItemKey, "ArrowUp", "End"];
-              if (prevKeys.includes(event.key)) candidateNodes.reverse();
+              if (prevKeys.includes(event.key)) {
+                candidateNodes.reverse();
+              }
               if (ARROW_KEYS.includes(event.key)) {
                 const currentIndex = candidateNodes.indexOf(
                   event.currentTarget,

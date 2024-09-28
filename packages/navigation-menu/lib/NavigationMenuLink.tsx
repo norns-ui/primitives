@@ -1,14 +1,15 @@
 "use client";
 
-import {FocusGroupItem} from "./FocusGroupItem";
-import {
-  dispatchDiscreteCustomEvent,
-  composeEventHandlers,
-} from "@norns-ui/shared";
 import {Norn} from "@norns-ui/norn";
-import {ROOT_CONTENT_DISMISS} from "./NavigationMenuContent";
+import {
+  composeEventHandlers,
+  dispatchDiscreteCustomEvent,
+} from "@norns-ui/shared";
+import {ComponentPropsWithoutRef, ElementRef, forwardRef} from "react";
+
+import {FocusGroupItem} from "./FocusGroupItem";
 import {ScopedProps} from "./NavigationMenu";
-import {ElementRef, ComponentPropsWithoutRef, forwardRef} from "react";
+import {ROOT_CONTENT_DISMISS} from "./NavigationMenuContent";
 
 const LINK_NAME = "NavigationMenuLink";
 const LINK_SELECT = "navigationMenu.linkSelect";
@@ -79,4 +80,4 @@ const NavigationMenuLink = forwardRef<
 NavigationMenuLink.displayName = LINK_NAME;
 
 export {NavigationMenuLink};
-export type {NavigationMenuLinkElement, NornLinkProps, NavigationMenuLinkProps};
+export type {NavigationMenuLinkElement, NavigationMenuLinkProps, NornLinkProps};

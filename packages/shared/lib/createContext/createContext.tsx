@@ -22,8 +22,12 @@ const createContext = <ContextValueType extends object | null>(
 
   const useContext = (consumerName: string) => {
     const context = createReactContext(Context);
-    if (context) return context;
-    if (defaultContext !== undefined) return defaultContext;
+    if (context) {
+      return context;
+    }
+    if (defaultContext !== undefined) {
+      return defaultContext;
+    }
     // if a defaultContext wasn't specified, it's a required context.
     throw new Error(
       `\`${consumerName}\` must be used within \`${rootComponentName}\``,

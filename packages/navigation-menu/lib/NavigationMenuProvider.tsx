@@ -1,6 +1,9 @@
 "use client";
 
 import {Direction, useCallbackRef, useId, usePrevious} from "@norns-ui/hooks";
+import {Scope} from "@norns-ui/shared";
+import {FC, ReactNode, useCallback, useState} from "react";
+
 import {
   Collection,
   ContentData,
@@ -10,8 +13,6 @@ import {
   ScopedProps,
   ViewportContentProvider,
 } from "./NavigationMenu";
-import {FC, ReactNode, useCallback, useState} from "react";
-import {Scope} from "@norns-ui/shared";
 import {NavigationMenuViewportElement} from "./NavigationMenuViewport";
 
 interface NavigationMenuProviderPrivateProps {
@@ -85,7 +86,9 @@ const NavigationMenuProvider: FC<NavigationMenuProviderProps> = ({
       }, [])}
       onViewportContentRemove={useCallback((contentValue) => {
         setViewportContent((prevContent) => {
-          if (!prevContent.has(contentValue)) return prevContent;
+          if (!prevContent.has(contentValue)) {
+            return prevContent;
+          }
           prevContent.delete(contentValue);
           return new Map(prevContent);
         });
@@ -101,4 +104,4 @@ const NavigationMenuProvider: FC<NavigationMenuProviderProps> = ({
 };
 
 export {NavigationMenuProvider};
-export type {NavigationMenuProviderProps, NavigationMenuProviderPrivateProps};
+export type {NavigationMenuProviderPrivateProps, NavigationMenuProviderProps};

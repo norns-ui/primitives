@@ -1,5 +1,5 @@
-import {useCallback} from "react";
 import {composeRefs, PossibleRef} from "@norns-ui/shared";
+import {useCallback} from "react";
 
 /**
  * A hook that composes multiple refs
