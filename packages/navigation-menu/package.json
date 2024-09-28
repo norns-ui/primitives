@@ -18,8 +18,10 @@
   ],
   "scripts": {
     "build": "node esbuild.config.js",
-    "pretty": "prettier --check $(find . -type d \\( -name 'node_modules' -o -name 'dist' \\) -prune -o -print)",
-    "pretty:fix": "prettier --write $(find . -type d \\( -name 'node_modules' -o -name 'dist' \\) -prune -o -print)",
+    "lint": "eslint lib",
+    "lint:fix": "eslint lib --fix",
+    "pretty": "prettier --check $(find . -type d \\( -name 'node_modules' -o -name 'dist' \\) -prune -o \\( -type f -name '*.js' -o -name '*.ts' -o -name '*.tsx' \\) -print)",
+    "pretty:fix": "prettier --write $(find . -type d \\( -name 'node_modules' -o -name 'dist' \\) -prune -o \\( -type f -name '*.js' -o -name '*.ts' -o -name '*.tsx' \\) -print)",
     "publish": "yarn npm publish --tolerate-republish"
   },
   "dependencies": {
@@ -34,10 +36,12 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@norns-ui/eslint-config-norns": "workspace:packages/eslint-config-norns",
     "@types/node": "^20.14.9",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "esbuild": "^0.23.0",
+    "eslint": "^9.11.1",
+    "prettier": "^3.3.3",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4"
   },
