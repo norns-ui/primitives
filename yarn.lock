@@ -925,6 +925,7 @@ __metadata:
     "@norns-ui/dismissable-layer": "workspace:^"
     "@norns-ui/eslint-config-norns": "workspace:^"
     "@norns-ui/focus-guards": "workspace:^"
+    "@norns-ui/focus-scope": "workspace:^"
     "@norns-ui/hooks": "workspace:^"
     "@norns-ui/norn": "workspace:^"
     "@norns-ui/portal": "workspace:^"
@@ -1016,7 +1017,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@norns-ui/focus-scope@workspace:packages/focus-scope":
+"@norns-ui/focus-scope@workspace:^, @norns-ui/focus-scope@workspace:packages/focus-scope":
   version: 0.0.0-use.local
   resolution: "@norns-ui/focus-scope@workspace:packages/focus-scope"
   dependencies:
